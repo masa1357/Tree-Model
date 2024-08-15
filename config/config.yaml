@@ -1,0 +1,53 @@
+name: Tree_Model_use_vector_distance
+description: Tree Model
+
+# scheduler:
+#   job: wandb/sweep-jobs/job-optuna-sweep-scheduler:latest
+#   resource: local-container
+#   num_workers: 1
+
+#   # Optunaの設定
+#   settings:
+#     sampler:
+#       # type: TPESampler
+#       type: CMAESampler
+#       n_startup_trials: 5
+#     pruner:
+#       type: PercentilePruner
+#       args:
+#         percentile: 25.0 # 下位75%のトライアルを削除
+#         n_warmup_steps: 10 # 最初の10ステップでプルーニングを無効化
+
+# job: wandb/sweep-jobs/job-Tree-kfold:latest
+# method: bayes
+method: random
+metric:
+  name: F1 Score
+  goal: maximize
+parameters:
+  objective:
+    value: "multiclass"  # 単一の文字列を指定
+  num_class:
+    value: 5  # 単一の整数を指定
+  metric:
+    value: "multi_logloss"  # 単一の文字列を指定
+  verbosity:
+    value: -1  # 単一の整数を指定
+  boosting_type:
+    values: ["gbdt", "dart"]  # リストとして指定
+  num_iterations:
+    min: 1000
+    max: 10000
+  max_depth:
+    min: 3
+    max: 10
+  learning_rate:
+    min: 0.01
+    max: 0.1
+  num_leaves:
+    min: 10
+    max: 100
+  class_weight:
+    values: [None, "balanced"]
+  use_data:
+    values: ["euc", "cos", "ALL", "NONE"]

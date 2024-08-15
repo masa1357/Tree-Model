@@ -1,0 +1,7 @@
+/data/
+*.csv
+
+/model/
+*.model
+
+/src/wandb/

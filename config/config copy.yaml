@@ -1,0 +1,40 @@
+name: Tree_Model_use_vector_distance
+scheduler:
+  resource: local  # 適切な環境に変更
+  num_workers: 1 
+
+  # Optunaの設定
+  settings:
+    sampler:
+      type: CMAESampler  # 選択したサンプラーを使用
+      n_startup_trials: 5
+    pruner:
+      type: PercentilePruner
+      args:
+        percentile: 25.0  # 下位75%のトライアルを削除
+        n_warmup_steps: 10  # 最初の10ステップでプルーニングを無効化
+
+job: wandb/sweep-jobs/job-Tree-kfold:latest
+method: bayes
+metric:
+  name: Final F1 Score
+  optimization: maximize
+
+parameters:
+  boosting_type:
+    values:
+      - gbdt
+      - dart
+      - goss
+  num_iterations:
+    min: 100
+    max: 1000
+  max_depth:
+    min: 3
+    max: 10
+  learning_rate:
+    min: 0.01
+    max: 0.1
+  num_leaves:
+    min: 10
+    max: 100
